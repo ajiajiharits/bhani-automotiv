@@ -1,0 +1,298 @@
+<?php
+include "config/database.php";
+$currentPage = "services";
+
+$kategori = isset($_GET['kategori'])
+  ? $_GET['kategori']
+  : "";
+
+$search = isset($_GET['search'])
+  ? $_GET['search']
+  : "";
+
+$limit = 9;
+$page = isset($_GET['page'])
+  ? $_GET['page']
+  : 1;
+
+$start = ($page - 1) * $limit;
+$where = "WHERE status='Available'";
+
+if ($kategori != "") {
+
+  $where .= " AND kategori='$kategori'";
+}
+
+if ($search != "") {
+
+  $where .= "
+    AND (
+        nama_mobil LIKE '%$search%'
+        OR kategori LIKE '%$search%'
+    )
+    ";
+}
+
+$countQuery = mysqli_query(
+  $conn,
+  "
+    SELECT COUNT(*) total
+    FROM mobil
+    $where
+    "
+);
+
+$totalData = mysqli_fetch_assoc($countQuery)['total'];
+$totalPage = ceil($totalData / $limit);
+$query = mysqli_query(
+  $conn,
+  "
+    SELECT *
+    FROM mobil
+    $where
+    ORDER BY created_at DESC
+    LIMIT $start,$limit
+    "
+);
+
+?>
+
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beli Mobil — Bhani Automotiv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a href="index.php" class="brand">
+        <img src="img/logo.png"
+          class="logo-img">
+        <span>
+          BHANI AUTOMOTIV
+        </span>
+      </a>
+      <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">
+        &#9776;
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.php" data-page="index.php">HOME</a></li>
+        <li><a href="about.php" data-page="about.php">ABOUT</a></li>
+        <li class="has-dropdown">
+          <a href="#" class="active">SERVICES</a>
+          <ul class="dropdown">
+            <li><a href="jual-mobil.php">Jual Mobil</a></li>
+            <li><a href="beli-mobil.php">Beli Mobil</a></li>
+          </ul>
+        </li>
+        <li><a href="gallery.php" data-page="gallery.php">GALLERY</a></li>
+        <li><a href="artikel.php" data-page="artikel.php">ARTICLE</a></li>
+        <li><a href="contact.php" data-page="contact.php">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="m-stripe"></div>
+
+  <section class="service-hero fade-up">
+
+    <img
+      src="img/showroom.jpg"
+      alt="Bhani Automotiv"
+      class="service-hero-img">
+    <div class="about-overlay"></div>
+
+    <div class="container">
+
+      <div class="service-hero-content">
+        <span class="eyebrow">
+          Services — Beli Mobil
+        </span>
+        <h1>
+          Temukan Kendaraan Impian Anda
+        </h1>
+        <p>
+          Jelajahi koleksi kendaraan pilihan Bhani Automotiv
+          mulai dari sport car, SUV, luxury car,
+          hingga kendaraan performa tinggi dengan kualitas terbaik.
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+ <hr class="divider fade-up">
+
+  <section class="fade-up">
+    <div class="container">
+      <form class="search-box" method="GET">
+        <input
+          type="text"
+          name="search"
+          placeholder="Cari kendaraan..."
+          value="<?= $search ?>">
+
+        <input type="hidden"
+          name="kategori"
+          value="<?= $kategori ?>">
+
+        <button class="btn">
+          Cari
+        </button>
+      </form>
+
+      <div id="filter-bar" class="filter-bar">
+        <a href="beli-mobil.php"
+          class="filter-btn <?= ($kategori == "") ? "active" : "" ?>">
+          Semua
+        </a>
+
+        <a href="beli-mobil.php?kategori=SUV"
+          class="filter-btn <?= ($kategori == "SUV") ? "active" : "" ?>">
+          SUV
+        </a>
+
+        <a href="beli-mobil.php?kategori=Sport"
+          class="filter-btn <?= ($kategori == "Sport") ? "active" : "" ?>">
+          Sport
+        </a>
+
+        <a href="beli-mobil.php?kategori=Luxury"
+          class="filter-btn <?= ($kategori == "Luxury") ? "active" : "" ?>">
+          Luxury
+        </a>
+
+        <a href="beli-mobil.php?kategori=Supercar"
+          class="filter-btn <?= ($kategori == "Supercar") ? "active" : "" ?>">
+          Supercar
+        </a>
+      </div>
+
+      <div class="grid grid-3">
+        <?php
+        if (mysqli_num_rows($query) > 0) {
+
+          while ($mobil = mysqli_fetch_assoc($query)) {
+
+        ?>
+
+            <div class="car-card">
+              <div class="car-media">
+                <img
+                  src="uploads/mobil/<?php echo $mobil['gambar']; ?>"
+                  alt="<?php echo $mobil['nama_mobil']; ?>">
+              </div>
+
+              <div class="car-body">
+                <h3>
+                  <?php echo $mobil['nama_mobil']; ?>
+                </h3>
+                <p>
+                  <?php echo $mobil['kategori']; ?>
+                </p>
+
+                <div class="car-specs-mini">
+                  <span>
+                    <?php echo $mobil['tahun']; ?>
+                  </span>
+
+                  <span>
+                    <?php echo $mobil['transmisi']; ?>
+                  </span>
+                </div>
+
+                <h4>
+                  Rp <?php echo number_format($mobil['harga'], 0, ',', '.'); ?>
+                </h4>
+                <a href="produk-detail.php?id=<?php echo $mobil['id_mobil']; ?>" class="btn">Lihat Detail</a>
+              </div>
+            </div>
+
+        <?php
+          }
+        } else {
+          echo "
+          <p class='empty-data'>
+          Belum ada kendaraan tersedia.
+          </p>
+          ";
+        }
+
+        ?>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="pagination fade-up">
+    <?php for ($i = 1; $i <= $totalPage; $i++) { ?>
+      <a
+        href="?page=<?= $i ?>&kategori=<?= $kategori ?>&search=<?= $search ?>"
+        class="<?= ($page == $i) ? 'active' : '' ?>">
+        <?= $i ?>
+      </a>
+    <?php } ?>
+  </div>
+
+  <footer class="site-footer fade-up">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <span class="brand">Bhani Automotiv</span>
+          <p>
+            Showroom kendaraan premium terpercaya yang menghadirkan
+            koleksi sport car, SUV, luxury car, dan supercar pilihan
+            dengan proses transaksi yang aman dan profesional.
+          </p>
+        </div>
+        <div>
+          <h4>Navigasi</h4>
+          <ul>
+            <li><a href="about.php">About</a></li>
+            <li><a href="jual-mobil.php">Jual Mobil</a></li>
+            <li><a href="beli-mobil.php">Beli Mobil</a></li>
+            <li><a href="gallery.php">Gallery</a></li>
+            <li><a href="artikel.php">Article</a></li>
+            <li><a href="contact.php">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Showroom</h4>
+          <ul>
+            <li>Jl. Sudirman Kav. 45, Jakarta Selatan</li>
+            <li>Senin - Sabtu, 09.00 - 18.00</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Bhani Automotiv.</span>
+      </div>
+    </div>
+  </footer>
+
+  <a
+    class="wa-float"
+    data-wa-message="Halo Bhani Automotiv, saya ingin bertanya mengenai kendaraan premium."
+    aria-label="Chat WhatsApp">
+    <svg
+      viewBox="0 0 32 32"
+      fill="#08130d"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.6 1.9 6.5L3 29l7.2-2.1c1.8 1 3.9 1.5 5.8 1.5 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.7c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.3 1.3 1.3-4.1-.2-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.4 9.7 10.2 5 16 5s10.6 4.7 10.6 10.5S21.8 25.7 16 25.7zm5.8-7.9c-.3-.2-1.9-.9-2.1-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7.1-.1.3-.4.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z" />
+    </svg>
+  </a>
+
+  <script src="assets/js/script.js"></script>
+</body>
+
+</html>
