@@ -1,3 +1,7 @@
+<?php
+include "config/database.php";
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -14,7 +18,7 @@
 
   <header class="site-header">
     <nav class="navbar">
-      <a href="index.html" class="brand">
+      <a href="index.php" class="brand">
         <img src="img/logo.png"
           class="logo-img">
         <span>
@@ -23,10 +27,10 @@
       </a>
       <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">&#9776;</button>
       <ul class="nav-links">
-        <li><a href="index.html" data-page="index.html" class="active">HOME</a></li>
+        <li><a href="index.php" data-page="index.php" class="active">HOME</a></li>
         <li><a href="about.php" data-page="about.php">ABOUT</a></li>
         <li class="has-dropdown">
-          <a href="#">SERVICES
+          <a href="#" class="<?= (isset($currentPage) && $currentPage == "services") ? "active" : "" ?>">SERVICES
           </a>
 
           <ul class="dropdown">
@@ -78,11 +82,11 @@
 
         <div class="hero-actions">
 
-          <a href="beli-mobil.html"
+          <a href="beli-mobil.php"
             class="btn btn-accent">
             Lihat Katalog
           </a>
-          <a href="jual-mobil.html"
+          <a href="jual-mobil.php"
             class="btn">
             Jual Mobil Anda
           </a>
@@ -187,20 +191,58 @@ BRAND LOGO RUNNING
     <div class="container">
       <div class="section-head">
         <h2>Koleksi Kendaraan Pilihan</h2>
-        <a href="beli-mobil.html" class="btn">Semua Katalog</a>
+        <a href="beli-mobil.php" class="btn">Semua Katalog</a>
       </div>
       <div class="grid grid-3 home-car-grid">
 
-        <div class="car-card fade-up">
-          <div class="car-body">
-            <h3 class="car-name">Koleksi Kendaraan Bhani Automotiv</h3>
-            <p class="car-kategori">Premium Used Car</p>
-            <p class="car-price">Katalog sedang diperbarui</p>
-            <div class="car-actions">
-              <a href="contact.html" class="btn btn-block">Hubungi Kami</a>
+        <?php
+        $query = mysqli_query(
+          $conn,
+          "SELECT * FROM mobil 
+          WHERE status='Available'
+          LIMIT 3"
+        );
+
+        if (mysqli_num_rows($query) > 0) {
+          while ($mobil = mysqli_fetch_assoc($query)) {
+
+        ?>
+
+            <div class="car-card fade-up">
+              <div class="car-media">
+                <img
+                  src="uploads/mobil/<?php echo $mobil['gambar']; ?>"
+                  alt="<?php echo $mobil['nama_mobil']; ?>">
+              </div>
+
+              <div class="car-body">
+                <h3 class="car-name">
+                  <?php echo $mobil['nama_mobil']; ?>
+                </h3>
+
+                <p class="car-kategori">
+                  <?php echo $mobil['kategori']; ?>
+                </p>
+
+                <p class="car-price">
+                  Rp <?php echo number_format($mobil['harga'], 0, ',', '.'); ?>
+                </p>
+
+                <div class="car-actions">
+                  <a href="produk-detail.php?id=<?php echo $mobil['id_mobil']; ?>" class="btn btn-block">Detail</a>
+                </div>
+              </div>
+
             </div>
-          </div>
-        </div>
+
+        <?php
+          }
+        } else {
+
+          echo "<p>Belum ada kendaraan tersedia.</p>";
+        }
+
+        ?>
 
       </div>
     </div>
@@ -366,12 +408,12 @@ BRAND LOGO RUNNING
 
         <div class="cta-actions">
 
-          <a href="beli-mobil.html"
+          <a href="beli-mobil.php"
             class="btn btn-accent">
             Lihat Koleksi Mobil
           </a>
 
-          <a href="contact.html"
+          <a href="contact.php"
             class="btn">
             Hubungi Kami
           </a>
@@ -391,12 +433,12 @@ BRAND LOGO RUNNING
         <div>
           <h4>Navigasi</h4>
           <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="jual-mobil.html">Jual Mobil</a></li>
-            <li><a href="beli-mobil.html">Beli Mobil</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="artikel.html">Article</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="jual-mobil.php">Jual Mobil</a></li>
+            <li><a href="beli-mobil.php">Beli Mobil</a></li>
+            <li><a href="gallery.php">Gallery</a></li>
+            <li><a href="artikel.php">Article</a></li>
+            <li><a href="contact.php">Contact</a></li>
           </ul>
         </div>
 
