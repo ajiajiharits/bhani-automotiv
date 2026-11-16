@@ -93,11 +93,6 @@
         </div>
 
         <div class="grid grid-3" id="car-list">
-          <!-- TEMPLATE KARTU MOBIL
-             Duplikat blok .car-card ini untuk menambahkan mobil berikutnya.
-             Ganti src gambar, alt, nama, kategori, tahun, transmisi, dan harga.
-             Sesuaikan id pada tautan produk-detail.html?id=1.
-        -->
           <div
             class="car-card"
             data-category="Sport"
@@ -152,17 +147,16 @@
             data-search="Nama Mobil Luxury"
           >
             <div class="car-media">
-              <img
-                src="img/rolls-royce-ghost.jpeg"
-                alt="Nama Mobil Luxury"
-              />
+              <img src="img/rolls-royce-ghost.jpeg" alt="Nama Mobil Luxury" />
             </div>
             <div class="car-body">
               <h3 class="car-name">ROLL-ROYCE GHOST 2024</h3>
               <p>Luxury</p>
               <div class="car-specs-mini">
                 <span>2024</span>
-                <span>6.75L V12 Twin-Turbo, Otomatis 8-speed, 4–5 penumpang</span>
+                <span
+                  >6.75L V12 Twin-Turbo, Otomatis 8-speed, 4–5 penumpang</span
+                >
               </div>
               <h4>Rp 4.200.000.000</h4>
               <button type="button" class="btn buy-car-btn">BELI</button>
@@ -176,17 +170,17 @@
             data-search="Nama Mobil Sedan"
           >
             <div class="car-media">
-              <img
-                src="img/bmw-f30.jpg"
-                alt="Nama Mobil Sedan"
-              />
+              <img src="img/bmw-f30.jpg" alt="Nama Mobil Sedan" />
             </div>
             <div class="car-body">
               <h3 class="car-name">BMW F30</h3>
               <p>Sedan</p>
               <div class="car-specs-mini">
                 <span>2012</span>
-                <span>2.0L 4-silinder TwinPower Turbo, Otomatis 8-speed, Otomatis 8-speed</span>
+                <span
+                  >2.0L 4-silinder TwinPower Turbo, Otomatis 8-speed, Otomatis
+                  8-speed</span
+                >
               </div>
               <h4>Rp 200.000.000</h4>
               <button type="button" class="btn buy-car-btn">BELI</button>
@@ -200,17 +194,17 @@
             data-search="Nama Mobil SUV"
           >
             <div class="car-media">
-              <img
-                src="img/bmw-x7.jpg"
-                alt="Nama Mobil SUV"
-              />
+              <img src="img/bmw-x7.jpg" alt="Nama Mobil SUV" />
             </div>
             <div class="car-body">
               <h3 class="car-name">BMW X7 M Sport</h3>
               <p>SUV</p>
               <div class="car-specs-mini">
                 <span>2019</span>
-                <span>3.0L 6-silinder TwinPower Turbo, Otomatis 8-speed, 6–7 penumpang</span>
+                <span
+                  >3.0L 6-silinder TwinPower Turbo, Otomatis 8-speed, 6–7
+                  penumpang</span
+                >
               </div>
               <h4>Rp 2.200.000.000</h4>
               <button type="button" class="btn buy-car-btn">BELI</button>
@@ -224,17 +218,17 @@
             data-search="Nama Mobil Sport"
           >
             <div class="car-media">
-              <img
-                src="img/supra-mk4.jpg"
-                alt="Nama Mobil Sport"
-              />
+              <img src="img/supra-mk4.jpg" alt="Nama Mobil Sport" />
             </div>
             <div class="car-body">
               <h3 class="car-name">TOYOTA SUPRA MK4</h3>
               <p>Sport</p>
               <div class="car-specs-mini">
                 <span>2002</span>
-                <span>3.0L Inline-6 2JZ-GTE Twin-Turbo, Manual 6-speed, 2 penumpang</span>
+                <span
+                  >3.0L Inline-6 2JZ-GTE Twin-Turbo, Manual 6-speed, 2
+                  penumpang</span
+                >
               </div>
               <h4>Rp 2.000.000.000</h4>
               <button type="button" class="btn buy-car-btn">BELI</button>
@@ -490,12 +484,91 @@
         width: 100%;
         cursor: pointer;
       }
+
+      .car-card {
+        min-width: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .car-card .car-body {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 12px;
+      }
+
+      .car-card .car-body h3 {
+        font-size: 14px;
+        line-height: 1.4;
+        overflow-wrap: break-word;
+      }
+
+      .car-card .car-body p {
+        line-height: 1.5;
+      }
+
+      .car-specs-mini {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        line-height: 1.5;
+      }
+
+      .car-specs-mini span {
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      .car-card .car-body h4 {
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 12px 0;
+        overflow-wrap: anywhere;
+      }
+
+      .car-card .buy-car-btn {
+        width: 100%;
+        box-sizing: border-box;
+      }
       @media (max-width: 480px) {
         .buy-confirm-dialog {
           padding: 26px 20px;
         }
         .buy-confirm-actions {
           flex-direction: column;
+        }
+
+        .grid.grid-3 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+        }
+
+        .car-card .car-body {
+          padding: 10px 8px;
+        }
+
+        .car-card .car-body h3 {
+          font-size: 12px;
+        }
+
+        .car-card .car-body p {
+          font-size: 12px;
+        }
+
+        .car-specs-mini {
+          font-size: 10px;
+        }
+
+        .car-card .car-body h4 {
+          font-size: 11px;
+        }
+
+        .car-card .buy-car-btn {
+          font-size: 10px;
+          padding: 8px 4px;
         }
       }
     </style>
